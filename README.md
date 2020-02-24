@@ -251,8 +251,8 @@ Tests are run via `docker`. This is also available through `apt` and `brew`.
 ## Support
 
 `node-deb` only officially supports the currently supported versions of Debian and Ubuntu (LTS). This includes both
-for building packages and deploying packages. At the time of this update, this translates to Debian Wheezy through
-Buster and Ubuntu Trusty through Xenial. Care has been taken to ensure this packages correctly on macOS, and macOS
+for building packages and deploying packages. At the time of this update, this translates to Debian Jessie through
+Buster and Ubuntu Trusty through Bionic. Care has been taken to ensure this packages correctly on macOS, and macOS
 specific issues should still be reported.
 
 ## Contributing
