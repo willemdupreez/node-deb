@@ -24,6 +24,7 @@ trap 'finish' EXIT
 [ $(find "$output/" -type f | grep 'templates' | wc -l) -gt 1 ] || die "Couldn't find templates"
 
 dpkg -i "node-deb_${node_deb_version}_all.deb"
+
 node-deb --verbose \
          -- node-deb templates/
 apt-get purge -y node-deb

@@ -5,6 +5,7 @@ Debian packaging for Node.js projects written 100% in `bash`.
 Simple.
 
 ## Installation
+
 `npm install node-deb`
 
 or
@@ -53,7 +54,9 @@ Command line options always override values found in the `node_deb` object, and 
 always override the values found in the rest of `package.json`.
 
 ## Examples
-#### Ex. 1
+
+### Ex. 1
+
 `package.json`:
 
 ```json
@@ -71,6 +74,7 @@ always override the values found in the rest of `package.json`.
 `cmd`: `node-deb -- app.js lib/`
 
 You will get:
+
 - A Debian package named `some-app_1.2.3_all.deb`
   - Containing the files `app.js` & `package.json` and the directory `lib`
   - Installed via
@@ -78,6 +82,7 @@ You will get:
     - `apt-get install some-app=1.2.3`
 
 On install, you will get.
+
 - An executable named `some-app`
   - That starts the app with the command `app.js arg1 arg2 arg3`
 - An `upstart` init script installed to `/etc/init/some-app.conf`
@@ -86,7 +91,8 @@ On install, you will get.
 - A Unix user `some-app`
 - A Unix group `some-app`
 
-#### Ex. 2
+### Ex. 2
+
 `package.json`:
 
 ```json
@@ -104,6 +110,7 @@ On install, you will get.
 `cmd`: `node-deb -u foo -g bar -v 20150826 -- index.js lib/`
 
 You will get:
+
 - A Debian package named `some-other-app_20150826_all.deb`
   - Containing the files `index.js`, `package.json`, & `npm-shrinkwrap.json|package-lock.json` and the directories `lib` &
     `node_modules`
@@ -112,6 +119,7 @@ You will get:
     - `apt-get install some-other-app=20150826`
 
 On install, you will get.
+
 - An executable named `some-other-app`
   - That starts the app with the command `index.js --daemon`
 - An `upstart` init script installed to `/etc/init/some-other-app.conf`
@@ -120,7 +128,8 @@ On install, you will get.
 - A Unix user `foo`
 - A Unix group `bar`
 
-#### Ex. 3
+### Ex. 3
+
 `package.json`:
 
 ```json
@@ -143,6 +152,7 @@ On install, you will get.
 `cmd`: `node-deb -- app.js lib/`
 
 You will get:
+
 - A Debian package named `a-third-app_0.10.1_all.deb`
   - Containing the files `index.js`, `package.json`, & `npm-shrinkwrap.json|package-lock.json` and the directories `lib` &
     `node_modules`
@@ -153,12 +163,14 @@ You will get:
   - With the `postinst` script rendered from the template `my-postinst-template.txt`
 
 On install, you will get.
+
 - An executable named `a-third-app`
   - That starts the app with the command `app.js`
 - No `upstart`, `systemd`, or `sysv` scripts
 - No Unix user or group
 
-#### Ex. 4
+### Ex. 4
+
 `package.json`:
 
 ```json
@@ -181,6 +193,7 @@ On install, you will get.
 `cmd`: `node-deb --no-default-package-dependencies -- app.js lib/`
 
 You will get:
+
 - A Debian package named `a-forth-app_0.10.1_all.deb`
   - Containing the files `index.js`, `package.json`, & `npm-shrinkwrap.json|package-lock.json` and the directories `lib` &
     `node_modules`
@@ -191,6 +204,7 @@ You will get:
   - With the `postinst` script rendered from the template `my-postinst-template.txt`
 
 On install, you will get.
+
 - An executable named `a-forth-app`
   - That starts the app with the command `app.js`
 - No `upstart`, `systemd`, or `sysv` scripts
@@ -207,7 +221,7 @@ More complete examples can be found by looking at `test.sh` and the correspondin
 
 ### Options
 
-This section incldues addtional details about the more advanced functionality of `node-deb`
+This section includes additonal details about the more advanced functionality of `node-deb`
 
 #### `--install-strategy`
 
@@ -223,6 +237,7 @@ The install strategy determines how dependencies in `node_modules` are included 
   `npm install --production` as part of the `postinst` maintainer script.
 
 ## Requirements
+
 - `dpkg`
 - `fakeroot`
 - [`jq`](https://stedolan.github.io/jq/)
@@ -230,17 +245,18 @@ The install strategy determines how dependencies in `node_modules` are included 
 These are all available through `apt` and `brew`.
 
 ### Dev Requirements
+
 Tests are run via `docker`. This is also available through `apt` and `brew`.
 
 ## Support
 
 `node-deb` only officially supports the currently supported versions of Debian and Ubuntu (LTS). This includes both
 for building packages and deploying packages. At the time of this update, this translates to Debian Wheezy through
-Stretch and Ubuntu Trusty through Xenial. Care has been taken to ensure this packages correctly on macOS, and macOS
+Buster and Ubuntu Trusty through Xenial. Care has been taken to ensure this packages correctly on macOS, and macOS
 specific issues should still be reported.
 
-
 ## Contributing
+
 Please make all pull requests to the `develop` branch.
 
 Please make sure all pull requests pass the test suite locally.

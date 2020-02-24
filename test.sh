@@ -1,22 +1,26 @@
 #!/bin/bash
 set -e
 
-declare -ar all_images=('debian-stretch'
+declare -r docker_repository='runoptimised/node-deb-test'
+
+declare -ar all_images=('debian-buster'
+                        'debian-stretch'
                         'debian-jessie'
-                        'debian-wheezy'
+                        'ubuntu-bionic'
                         'ubuntu-xenial'
                         'ubuntu-trusty')
 
 # TODO wheezy doesn't have a good upstat image
 declare -ar upstart_images=('ubuntu-trusty')
 
-# TODO debian doesn't have nice images for this
-declare -ar systemd_images=('ubuntu-xenial')
-
 # TODO why doesn't this work in jessie / xenial?
-declare -ar sysv_images=('debian-stretch'
-                         'debian-wheezy'
-                         'ubuntu-trusty')
+declare -ar sysv_images=('ubuntu-trusty')
+
+# TODO debian doesn't have nice images for this
+declare -ar systemd_images=('debian-buster'
+                            'debian-stretch'
+                            'debian-jessie'
+                            'ubuntu-xenial')
 
 declare -ar all_tests=('simple'
                        'whitespace'
@@ -102,6 +106,8 @@ fail() {
 
 trap 'fail' EXIT
 
+[ ! -d ./test_stage ] || rm -Rf ./test_stage
+cp -R ./test ./test_stage
 
 for tst in "${all_tests[@]}"; do
   if [[ "$tst" != "${test_name:-$tst}" ]]; then continue; fi
@@ -113,8 +119,8 @@ for tst in "${all_tests[@]}"; do
     docker run --rm \
                --volume "$PWD:/src" \
                --workdir '/src' \
-               "heartsucker/node-deb-test:$image" \
-               "/src/test/$tst/test.sh"
+               "$docker_repository:$image" \
+               "/src/test_stage/$tst/test.sh"
     print_green "Success for test $tst for image $image"
     print_divider
   done
@@ -135,11 +141,11 @@ for image in "${systemd_images[@]}"; do
              --detach \
              --privileged \
              --volume /:/host \
-             "heartsucker/node-deb-test:$image" \
+             "$docker_repository:$image" \
              '/sbin/init'
   docker start "$name"
   docker exec "$name" \
-              '/src/test/systemd-app/test.sh'
+              '/src/test_stage/systemd-app/test.sh'
   docker rm -f "$name"
 
   # TODO add trap that kills the container
@@ -161,11 +167,11 @@ for image in "${upstart_images[@]}"; do
              --workdir '/src' \
              --name "$name" \
              --detach \
-             "heartsucker/node-deb-test:$image" \
+             "$docker_repository:$image" \
              '/sbin/init'
   docker start "$name"
   docker exec "$name" \
-              '/src/test/upstart-app/test.sh'
+              '/src/test_stage/upstart-app/test.sh'
   docker rm -f "$name"
 
   # TODO add trap that kills the container
@@ -185,8 +191,8 @@ for image in "${sysv_images[@]}"; do
              --volume "$PWD:/src" \
              --workdir '/src' \
              --name "$name" \
-             "heartsucker/node-deb-test:$image" \
-             '/src/test/sysv-app/test.sh'
+             "$docker_repository:$image" \
+             '/src/test_stage/sysv-app/test.sh'
 
   print_green "Success for sysv test for image $image"
   print_divider
@@ -202,8 +208,8 @@ for tst in "${simple_tests[@]}"; do
     docker run --rm \
                --volume "$PWD:/src" \
                --workdir '/src' \
-               "heartsucker/node-deb-test:$image" \
-               "/src/test/$tst.sh"
+               "$docker_repository:$image" \
+               "/src/test_stage/$tst.sh"
     print_green "Success for test $tst for image $image"
     print_divider
   done
